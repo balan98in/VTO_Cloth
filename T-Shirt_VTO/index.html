@@ -1,0 +1,307 @@
+<html>
+  <head>
+    <title>EFFE Jewelry Virtual Try-on Software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="apple-mobile-web-app-mobilechrome-capable" content="yes" />
+    <script src="./scripts/mindar-face.prod.js"></script>
+    <script src="./scripts/aframe.min.js"></script>
+    <script src="./scripts/mindar-face-aframe.prod.js"></script>
+    <script>
+      //glasses1-entity
+      //glasses2-entity
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("PRINT STUFF!");
+
+        const jeweltext = document.getElementById("jewel-text");
+        const jewellist = document.getElementById("jewel-list");
+        jeweltext.addEventListener("click", () => {
+          console.log("Got clicked!");
+          if (jewellist.style.display === "none")
+            jewellist.style.display = "block";
+          else jewellist.style.display = "none";
+        });
+
+        const list = [
+          "glasses1",
+          "glasses2",
+          "glasses3",
+          "glasses4",
+          "glasses5",
+        ];
+        //const visibles = [true, false, false, true, true];
+        const visibles = [false, false, false, false, false];
+
+        const setVisible = (button, entities, visible) => {
+          console.log("SET VIS CALLED\n");
+          if (visible == true) {
+            button.classList.add("selected");
+          } else {
+            button.classList.remove("selected");
+          }
+          entities.forEach((entity) => {
+            console.log(visible);
+            entity.setAttribute("visible", visible);
+          });
+        };
+
+        list.forEach((item, index) => {
+          const button = document.querySelector("#" + item);
+          const entity = document.querySelectorAll("." + item + "-entity");
+
+          button.addEventListener("click", () => {
+            console.log("\n**************Got CLICKED************\n");
+            console.log(visibles);
+            const bool = visibles[index];
+            list.forEach((new_item, new_index) => {
+              const new_button = document.querySelector("#" + new_item);
+              const new_entity = document.querySelectorAll(
+                "." + new_item + "-entity"
+              );
+              setVisible(new_button, new_entity, "false");
+              visibles[new_index] = false;
+            });
+
+            visibles[index] = !bool;
+            setVisible(button, entity, visibles[index]);
+            console.log(visibles);
+            console.log("****************SET***************\n");
+          });
+        });
+      });
+    </script>
+    <style>
+      body {
+        margin: 0;
+      }
+      .logo-model {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 0;
+      }
+      .logo-model img {
+        border: solid 0px;
+        width: 200px;
+        height: px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      .example-container {
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .options-panel {
+        position: fixed;
+        left: 20;
+        top: 190;
+        z-index: 2;
+      }
+      .options-panel img {
+        border: solid 2px;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      .options-logo {
+        position: fixed;
+        left: 50;
+        top: 557;
+        z-index: 10;
+      }
+      .options-logo img {
+        border: solid 2px;
+        width: 265px;
+        height: px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      .options-panel img.selected {
+        border-color: green;
+      }
+      .logo-model img.selected {
+        border-color: green;
+      }
+      h4 {
+        text-align: center;
+        background-color: black;
+        text-transform: uppercase;
+        color: white;
+      }
+      .animate-charcter {
+        text-transform: uppercase;
+        background-image: linear-gradient(
+          -225deg,
+          #231557 0%,
+          #44107a 29%,
+          #ff1361 67%,
+          #fff800 100%
+        );
+        background-size: auto auto;
+        background-clip: border-box;
+        background-size: 200% auto;
+        color: #fff;
+        background-clip: text;
+        text-fill-color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textclip 2s linear infinite;
+        display: inline-block;
+        font-size: 20px;
+      }
+
+      @keyframes textclip {
+        to {
+          background-position: 200% center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="example-container">
+      <div class="options-panel">
+        <div id="jewel-text">
+          <h4 class="animate-charcter">Shirt COLLECTION</h4>
+        </div>
+
+        <br />
+        <div id="jewel-list">
+          <img
+            id="glasses1"
+            src="dist/img1.png"
+          />
+          <br /><br />
+          <img
+            id="glasses2"
+            src="dist/img2.jpg"
+          />
+          <br /><br />
+          <img
+            id="glasses3"
+            src="dist/img3.jpg"
+          />
+          <br /><br />
+          <img
+            id="glasses4"
+            src="dist/img4.jpg"
+          />
+          <br /><br />
+          <img
+            id="glasses5"
+            src="dist/img5.jpg"
+          />
+        </div>
+      </div>
+      <div class="logo-model">
+        <img
+          id="logo"
+          src="dist\EFFE-logo.png"
+        />
+      </div>
+      <div>
+        <ul class="logo-model">
+          <br /><br /><br />
+          <p><b>VIRTUAL TRY-ON</b></p>
+        </ul>
+      </div>
+      <a-scene
+        mindar-face
+        embedded
+        color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+      >
+        <a-assets>
+          <a-asset-item
+            id="headModel"
+            src="3d_model/headOccluder.glb"
+          ></a-asset-item>
+          <a-asset-item
+            id="glassesModel1"
+            src="3d_model/test1.glb"
+          ></a-asset-item>
+          <a-asset-item
+            id="glassesModel2"
+            src="3d_model/set2.glb"
+          ></a-asset-item>
+          <a-asset-item
+            id="glassesModel3"
+            src="3d_model/set3.glb"
+          ></a-asset-item>
+          <a-asset-item
+            id="glassesModel4"
+            src="3d_model/set4.glb"
+          ></a-asset-item>
+          <a-asset-item
+            id="glassesModel5"
+            src="3d_model/set5.glb"
+          ></a-asset-item>
+        </a-assets>
+        <a-camera active="false" position="0 0 0"></a-camera>
+        <!-- head occluder -->
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            mindar-face-occluder
+            position="0 -0.3 0.15"
+            rotation="0 0 0"
+            scale="0.065 0.065 0.065"
+            src="#headModel"
+          ></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            rotation="0 -0 0"
+            position="0 0 0"
+            scale="1 1 1"
+            src="#glassesModel1"
+            class="glasses1-entity"
+            visible="false"
+          ></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            rotation="0 -0 0"
+            position="0 0 0"
+            scale="1 1 1"
+            src="#glassesModel2"
+            class="glasses2-entity"
+            visible="false"
+          ></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            rotation="0 -0 0"
+            position="0 0 0"
+            scale="1 1 1"
+            src="#glassesModel3"
+            class="glasses3-entity"
+            visible="false"
+          ></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            rotation="0 -0 0"
+            position="0 0 0"
+            scale="1 1 1"
+            src="#glassesModel4"
+            class="glasses4-entity"
+            visible="false"
+          ></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            rotation="0 -0 0"
+            position="0 0 0"
+            scale="1 1 1"
+            src="#glassesModel5"
+            class="glasses5-entity"
+            visible="false"
+          ></a-gltf-model>
+        </a-entity>
+      </a-scene>
+    </div>
+  </body>
+</html>
